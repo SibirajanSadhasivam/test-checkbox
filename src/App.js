@@ -50,7 +50,7 @@ export default function App() {
         </body>
 </html>`;
 
-    var arr = [];
+    // var arr = [];
 
     function handleChange(event) {
         console.log(event);
@@ -104,46 +104,49 @@ export default function App() {
 
     // let arrNew = [];
 
-    function arraySetter(checkboxValue, checkboxName) {
+    function arraySetter(checkboxValue, checkboxName,setFn) {
         let arr = arrNew
-        console.log("checkbox value")
-        console.log(checkboxValue)
-        console.log("checkboxName  " + checkboxName)
+        // console.log("checkbox value")
+        // console.log(checkboxValue)
+        // console.log("checkboxName  " + checkboxName)
         if(checkboxValue) {
             arr.push(checkboxName)
         } else {
-            arr.filter(val => val !== (checkboxName))
+            arr = arr.filter(val => val != (checkboxName))
         }
-        console.log(arr)
         setArrNew(arr)
+        setFn((checkboxValue) => !checkboxValue)
+        // console.log(arr)
     }
 
     function samplefn(event) {
-        console.log("hi");
-        console.log(event.target.value)
+        // console.log("hi");
+        // console.log(event.target.value)
 
         switch (event.target.value) {
             case 'mute-audio-im':
-                console.log("switch-case")
-                setMuteAudioIM((muteAudioIM) => !muteAudioIM)
-                //arraySetter(muteAudioIM, event.target.value)
+                // console.log("switch-case")
+                arraySetter(!muteAudioIM, event.target.value, setMuteAudioIM)
+                // console.log(arrNew);
+                // arraySetter(muteAudioIM, event.target.value)
                 break;
             case 'mute-video-im':
-                setMuteAudioIM((muteVideoIM) => !muteVideoIM)
-                //arraySetter(muteVideoIM, event.target.value)
+                // setMuteAudioIM((muteVideoIM) => !muteVideoIM)
+                arraySetter(!muteVideoIM, event.target.value, setMuteVideoIM)
+                // setMuteAudioIM((muteVideoIM) => !muteVideoIM)
                 break;
         }
     };
 
-    useEffect (() => {
-        console.log("useeffect audio"); 
-        arraySetter(muteAudioIM, event.target.value)
-    }, [muteAudioIM]);
+    // useEffect (() => {
+    //     console.log("useeffect audio"); 
+    //     arraySetter(muteAudioIM, event.target.value)
+    // }, [muteAudioIM]);
 
-    useEffect (() => {
-        console.log("useeffect video"); 
-        arraySetter(muteVideoIM, event.target.value)
-    }, [muteVideoIM]);
+    // useEffect (() => {
+    //     console.log("useeffect video"); 
+    //     arraySetter(muteVideoIM, event.target.value)
+    // }, [muteVideoIM]);
 
   return (
       
@@ -154,7 +157,10 @@ export default function App() {
                 <div className='flex-child'>
                     <div>
                     
-                    {/* {console.log( "here mute video" + muteVideoIM)} */}
+                    {console.log( "mute Audio -> " + muteAudioIM)}
+                    {console.log( "Mute Video -> " + muteVideoIM)}
+                    {console.log( "Array -> " + arrNew)}
+
                     {/* <Checkbox
                         value='mute-audio'
                         name='meeting-controls'
