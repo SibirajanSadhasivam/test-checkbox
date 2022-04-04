@@ -1,11 +1,19 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Select, SelectOption, Input, Checkbox, CheckboxGroup} from '@momentum-ui/react';
 import '@momentum-ui/core/css/momentum-ui.min.css';
-import './App.css';
+import {CodeBlock, tomorrow, a11yDark, googlecode} from "react-code-blocks";
+import './App.scss';
 
 export default function App() {
+
+
+
     const [token, setToken] = useState('');
     const [destination, setDestination] = useState('');
+    const [checked, setChecked] = useState(false);
+
+
+
     const [width, setWidth] = useState('');
     const [height, setHeight] = useState('');
     const [muteAudioIM, setMuteAudioIM] = useState(false);
@@ -18,24 +26,152 @@ export default function App() {
     const [muteVideoIC, setMuteVideoIC] = useState(false);
     const [settingsIC, setSettingsIC] = useState(false);
     const [joinMeetingIC, setJoinMeetingIC] = useState(false);
+    const [arrNew, setArrNew] = useState([]);
 
-  
+    const code =
+    `<html>
+        <head>
+            <title>Webex Widget Demo</title>
+            <link href="https://cdn.jsdelivr.net/gh/WXSD-Sales/MeetingWidget/docs/webex-widgets.css" />
+            <script src="https://cdn.jsdelivr.net/gh/WXSD-Sales/MeetingWidget/docs/bundle.js"></script>
+        </head>
+        <body>
+            <div id="meeting-widget"></div>
+            <script>
+                webexMeetingWidget({accessToken: "${token}",
+                    meetingDestination: "${destination}",
+                    theme:"light",
+                    width:"${width}",
+                    height:"${height}",
+                    layout:"Grid",
+                    inMeetingControls:['mute-audio','leave-meeting'],
+                    interstitialControls:['join-meeting']});
+            </script>
+        </body>
+</html>`;
+
+    var arr = [];
+
     function handleChange(event) {
-        console.log(muteAudioIM)
+        console.log(event);
+        // console.log('handle change ' + checked);
+        // var val = event.target.value.substring(0, event.target.value.length - 3);
+        // setChecked((isChecked) => toggle(isChecked))
+        // console.log("checked " + checked)
+        // if(!checked){
+        //     arr.push(val)
+        //     //setChecked(toggle)
+        // } else {
+        //     console.log(arr)
+        //     arr.filter(event => event !== (val))
+        // }
+        // console.log(arr)
+    }
+
+    // var val = event.target.value;
+        // console.log(val)
+        // setChecked(toggle);
+        // console.log(checked)
+
+        // if(!checked) {
+        //     mc.push(val);
+        // } else {
+        //     mc.filter(event => event !== (val))
+        // }
+        // console.log("meeting controls...")
+        // console.log(mc);
+
+   
+    const [ meetingControls, setMeetingControls] = useState([])
+    
+    function change(event) {
+        console.log(event.target.name);
+        console.log(event.target.value);
+        console.log(event.target.checked);
+
+        // setChecked((checked) => !checked)
+        // setMeetingControls((meetingControls) => [...meetingControls, event.target.value])
+        // console.log(meetingControls)
+
+        
     }
 
     function toggle(value) {
-        console.log(!value)
+        // console.log("toggle value ")
+        console.log(!value);
         return !value;
     }
 
+    // let arrNew = [];
+
+    function arraySetter(checkboxValue, checkboxName) {
+        let arr = arrNew
+        console.log("checkbox value")
+        console.log(checkboxValue)
+        console.log("checkboxName  " + checkboxName)
+        if(checkboxValue) {
+            arr.push(checkboxName)
+        } else {
+            arr.filter(val => val !== (checkboxName))
+        }
+        console.log(arr)
+        setArrNew(arr)
+    }
+
+    function samplefn(event) {
+        console.log("hi");
+        console.log(event.target.value)
+
+        switch (event.target.value) {
+            case 'mute-audio-im':
+                console.log("switch-case")
+                setMuteAudioIM((muteAudioIM) => !muteAudioIM)
+                //arraySetter(muteAudioIM, event.target.value)
+                break;
+            case 'mute-video-im':
+                setMuteAudioIM((muteVideoIM) => !muteVideoIM)
+                //arraySetter(muteVideoIM, event.target.value)
+                break;
+        }
+    };
+
+    useEffect (() => {
+        console.log("useeffect audio"); 
+        arraySetter(muteAudioIM, event.target.value)
+    }, [muteAudioIM]);
+
+    useEffect (() => {
+        console.log("useeffect video"); 
+        arraySetter(muteVideoIM, event.target.value)
+    }, [muteVideoIM]);
+
   return (
+      
       <div>
           <header className='App-header'>
           {/* <h1 className='header'>Meetings Widget Demo</h1> */}
           <div className='outerDiv'>
                 <div className='flex-child'>
                     <div>
+                    
+                    {/* {console.log( "here mute video" + muteVideoIM)} */}
+                    {/* <Checkbox
+                        value='mute-audio'
+                        name='meeting-controls'
+                        label='mute-audio'
+                        htmlId='testCheckbox1'
+                       
+                        onChange={() => setMuteAudioIM(toggle)}
+                    />
+                    
+                    <Checkbox
+                        value='mute-video'
+                        name='meeting-controls'
+                        label='mute-video'
+                        htmlId='testCheckbox2'
+                        checked={true}
+                        onChange={change}
+                    />  */}
                     
                     <Input
                         name='Access Token'
@@ -63,18 +199,33 @@ export default function App() {
                         InMeeting Controls
                             <div className='form-inline'>
                                 <div>
+                                {/* {console.log( "here mute audio " + muteAudioIM)} */}
                                     <CheckboxGroup name='CheckboxGroup1'>
                                         <Checkbox
                                             value='mute-audio-im'
+                                            name='meeting-controls'
                                             label='mute-audio'
                                             htmlId='testCheckbox1'
-                                            onClick={() => setMuteAudioIM(toggle)}
+                                            checked={muteAudioIM}
+                                            // onChange={() => setMuteAudioIM(!muteAudioIM) }
+                                            onClick={(event)=> {
+                                                
+                                                samplefn(event);
+                                                // setMuteAudioIM(!muteAudioIM);
+                                            }}
                                         />
                                         <Checkbox
                                             value='mute-video-im'
+                                            name='meeting-controls'
                                             label='mute-video'
                                             htmlId='testCheckbox2'
-                                            onClick={() => setMuteVideoIM(toggle)}
+                                            checked={muteVideoIM}
+                                            // onClick={() => setMuteVideoIM(!muteVideoIM)}
+                                            onClick={(event)=> {
+                                                
+                                                samplefn(event);
+                                                // setMuteVideoIM(!muteVideoIM);
+                                            }}
                                         />   
                                     </CheckboxGroup>
                                 </div>
@@ -187,12 +338,21 @@ export default function App() {
                     </div>    
                 </div>
                 <div className='flex-child'>
-                    right div
-                    
+                <div className="code">
+                    <CodeBlock
+                        text={code}
+                        language={"html"}
+                        showLineNumbers={true}
+                        theme={tomorrow}
+                        wraplines
+                    />
+                </div>
               </div>
           </div>
           </header>
       </div>
   );
 }
+
+
 
