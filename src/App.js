@@ -2,16 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {Select, SelectOption, Input, Checkbox, CheckboxGroup} from '@momentum-ui/react';
 import '@momentum-ui/core/css/momentum-ui.min.css';
 import {CodeBlock, tomorrow, a11yDark, googlecode} from "react-code-blocks";
+import { lightTheme, darkTheme } from './Constants';
 import './App.scss';
 
 export default function App() {
 
-
-
+    // const lightTheme = 'light';
+    // const darkTheme = 'dark';
+    // const [theme,changeTheme] = useState('light')
     const [token, setToken] = useState('');
     const [destination, setDestination] = useState('');
     const [checked, setChecked] = useState(false);
-
 
 
     const [width, setWidth] = useState('');
@@ -316,8 +317,8 @@ export default function App() {
                         Theme
                         <div className='form-inline'>   
                             <Select defaultValue='Select Item Here' >
-                                <SelectOption value='light' label='light' onChange={(event) => console.log(event.target.value)}/>
-                                <SelectOption value='dark' label='dark' />
+                                <SelectOption value={lightTheme} label={lightTheme} onClick={() => console.log(lightTheme)}/>
+                                <SelectOption value={darkTheme} label={darkTheme} />
                             </Select>
                         </div>
                     </div> 
